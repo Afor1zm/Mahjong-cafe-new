@@ -31,13 +31,13 @@ public class FieldGenerator : MonoBehaviour
     {
         if (_widthOfField <= 2)
         {
-            _mainCamera.transform.position = new Vector3(50f, 50f, 10f);
-            _mainCamera.orthographicSize = 50;
+            _mainCamera.transform.position = new Vector3(30f, 50f, 20f);
+            _mainCamera.orthographicSize = 40;
         }
         else
         {
-            _mainCamera.transform.position = new Vector3((30f + (_widthOfField)*10), 50f, _widthOfField*10-10f);
-            _mainCamera.orthographicSize = (30f + (_widthOfField) * 10);
+            _mainCamera.transform.position = new Vector3((12f + (_widthOfField)*10), 50f, _widthOfField*10);
+            _mainCamera.orthographicSize = ((_widthOfField) * 20);
         }
         _bufferListObject.GetComponent<SpecialList>()._chipsCoordinate = new GameObject[_lengthOfField, _widthOfField, 1];
         points = 0;
