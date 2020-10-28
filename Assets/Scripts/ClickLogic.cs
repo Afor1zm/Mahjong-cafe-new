@@ -44,16 +44,18 @@ public class ClickLogic : MonoBehaviour, IPointerClickHandler
         if (component.ZPosition +1 > specialList._chipsCoordinate.GetUpperBound(2))
         {
             if (component.XPosition + 1 > specialList._chipsCoordinate.GetUpperBound(0) || component.XPosition - 1 < 0)
-            {
-                Debug.Log($"lol111 {component.XPosition + 1}");
+            {                
                 Comparison();
             }
             else
             {
                 if (specialList._chipsCoordinate[XPosition + 1, YPosition, ZPosition].activeSelf == false || specialList._chipsCoordinate[XPosition - 1, YPosition, ZPosition].activeSelf == false)
-                {
-                    Debug.Log($"lol");
+                {                   
                     Comparison();
+                }
+                else
+                {
+                    DeSelectChips();
                 }
             }
             
@@ -62,13 +64,6 @@ public class ClickLogic : MonoBehaviour, IPointerClickHandler
         {
 
         }
-
-
-
-        //if (_used == false)
-        //{
-        //    Comparison();
-        //}
     }
 
     public void GetLastRecipe()
@@ -104,20 +99,24 @@ public class ClickLogic : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            foreach (GameObject material in specialList._usedObjects)
-            {
-                material.GetComponent<Renderer>().materials[0].color = new Color(1f, 1f, 1f);
-                material.GetComponent<Renderer>().materials[1].color = new Color(1f, 1f, 1f);
-                material.GetComponent<ClickLogic>()._used = false;
-            }
+            DeSelectChips();
+        }
+    }
 
-            for (int i = specialList._localList.Count - 1; i >= 0; i--)
-            {
-                ingredientList.Add(specialList._localList[i]);
-            }
-            specialList._localList.Clear();
-            specialList._usedObjects.Clear();
+    public void DeSelectChips()
+    {
+        foreach (GameObject material in specialList._usedObjects)
+        {
+            material.GetComponent<Renderer>().materials[0].color = new Color(1f, 1f, 1f);
+            material.GetComponent<Renderer>().materials[1].color = new Color(1f, 1f, 1f);
+            material.GetComponent<ClickLogic>()._used = false;
         }
 
+        for (int i = specialList._localList.Count - 1; i >= 0; i--)
+        {
+            ingredientList.Add(specialList._localList[i]);
+        }
+        specialList._localList.Clear();
+        specialList._usedObjects.Clear();
     }
 }
