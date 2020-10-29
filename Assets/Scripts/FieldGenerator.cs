@@ -113,29 +113,92 @@ public class FieldGenerator : MonoBehaviour
     {
         int YCoordinate = 0;
         int XCoordinate = 0;
+        float randomvalue;
+        int helpVariable = 0;
 
-        //int countChips = 0;
-        //int emptyTypeNumber;
         for (int l = _ricepList.Count - 1; l >= 0; l--)
         {
             for (int k = 0; k <= _ricepList[l]._recipe.Count - 1; k++)
             {
-
-                //emptyTypeNumber = Random.Range(0, chipsAdded.Count - 1);
-                chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._emptyType = false;
-                //_chipsEdited.Add(chipsAdded[emptyTypeNumber]);
-                chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._ingredient = _ricepList[l]._recipe[k]._ingredient;
-                //_chipsEdited[countChips]._ingredient = _ricepList[l]._recipe[k]._ingredient;
-                SetTexturesForChips(chipsAdded[numberOfColumn[XCoordinate], YCoordinate].gameObject, l, k);
-                //chipsAdded.Remove(chipsAdded[emptyTypeNumber]);
-                //countChips++;
-                YCoordinate++;
-                if (YCoordinate > _widthOfField -1)
+                Debug.Log($"I'm doing it for this time");
+                randomvalue = Random.value;
+                if(randomvalue <= 0.5f)
                 {
-                    XCoordinate++;
-                    YCoordinate = 0;
+                    Debug.Log($"Random less");
+                    if (chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._emptyType == true)
+                    {
+                        chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._emptyType = false;
+                        chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._ingredient = _ricepList[l]._recipe[k]._ingredient;
+                        SetTexturesForChips(chipsAdded[numberOfColumn[XCoordinate], YCoordinate].gameObject, l, k);
+                        YCoordinate++;
+                        if (helpVariable >= 2)
+                        {
+                            XCoordinate++;
+                            helpVariable = 0;
+                        }
+                        if (YCoordinate >= (_widthOfField))
+                        {                            
+                            YCoordinate = 0;
+                            helpVariable++;
+                        }
+                    }
+                    else
+                    {
+                        chipsAdded[numberOfColumn[XCoordinate + 1], YCoordinate]._emptyType = false;
+                        chipsAdded[numberOfColumn[XCoordinate + 1], YCoordinate]._ingredient = _ricepList[l]._recipe[k]._ingredient;
+                        SetTexturesForChips(chipsAdded[numberOfColumn[XCoordinate + 1], YCoordinate].gameObject, l, k);
+                        YCoordinate++;
+                        if (helpVariable >= 2)
+                        {
+                            XCoordinate++;
+                            helpVariable = 0;
+                        }
+                        if (YCoordinate >= (_widthOfField))
+                        {
+                            YCoordinate = 0;
+                            helpVariable++;
+                        }
+                    }
+                    
                 }
-
+                else
+                {
+                    Debug.Log($"Random more");
+                    if (chipsAdded[numberOfColumn[XCoordinate + 1], YCoordinate]._emptyType == true)
+                    {
+                        chipsAdded[numberOfColumn[XCoordinate + 1], YCoordinate]._emptyType = false;
+                        chipsAdded[numberOfColumn[XCoordinate + 1], YCoordinate]._ingredient = _ricepList[l]._recipe[k]._ingredient;
+                        SetTexturesForChips(chipsAdded[numberOfColumn[XCoordinate + 1], YCoordinate].gameObject, l, k);
+                        YCoordinate++;
+                        if (helpVariable >= 2)
+                        {
+                            XCoordinate++;
+                            helpVariable = 0;
+                        }
+                        if (YCoordinate >= (_widthOfField))
+                        {
+                            YCoordinate = 0;
+                            helpVariable++;
+                        }
+                    }
+                    else
+                    {
+                        chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._emptyType = false;
+                        chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._ingredient = _ricepList[l]._recipe[k]._ingredient;
+                        SetTexturesForChips(chipsAdded[numberOfColumn[XCoordinate], YCoordinate].gameObject, l, k);
+                        YCoordinate++;
+                        if (helpVariable >= 2)
+                        {
+                            XCoordinate++;
+                            helpVariable = 0;
+                        }
+                        if (YCoordinate >= (_widthOfField))
+                        {
+                            YCoordinate = 0;
+                            helpVariable++;
+                        }
+                    }
+                }
             }
         }
     }
@@ -220,11 +283,11 @@ public class FieldGenerator : MonoBehaviour
 
     public void SimpleNumber()
     {
-        for (int i =0; i <= (_widthOfField/2); i++)
+        for (int i =0; i < (_widthOfField/2); i++)
         {
             numberOfColumn.Add(0 + i);
             numberOfColumn.Add((_widthOfField-1)-i);
+            Debug.Log($"{0 + i} and {(_widthOfField-1)-i}");
         }
-
     }
 }
