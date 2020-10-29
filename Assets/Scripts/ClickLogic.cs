@@ -27,30 +27,30 @@ public class ClickLogic : MonoBehaviour, IPointerClickHandler
         chips = gameObject.GetComponent<Chips>();
         specialList = _bufferListObject.GetComponent<SpecialList>();
         _component = gameObject.GetComponent<Renderer>();
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        
+
+
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         ClickLogic component;
-        component = specialList._chipsCoordinate[XPosition, YPosition, ZPosition].GetComponent<ClickLogic>();
-        if (component.ZPosition +1 > specialList._chipsCoordinate.GetUpperBound(2))
+        component = specialList._chipsCoordinate[XPosition, YPosition, ZPosition].GetComponent<ClickLogic>();        
+        if (component.ZPosition + 1 > specialList._chipsCoordinate.GetUpperBound(2))
         {
             if (component.XPosition + 1 > specialList._chipsCoordinate.GetUpperBound(0) || component.XPosition - 1 < 0)
-            {                
+            {
                 Comparison();
             }
             else
             {
                 if (specialList._chipsCoordinate[XPosition + 1, YPosition, ZPosition].activeSelf == false || specialList._chipsCoordinate[XPosition - 1, YPosition, ZPosition].activeSelf == false)
-                {                   
+                {
                     Comparison();
                 }
                 else
@@ -58,7 +58,7 @@ public class ClickLogic : MonoBehaviour, IPointerClickHandler
                     DeSelectChips();
                 }
             }
-            
+
         }
         else
         {
@@ -69,7 +69,7 @@ public class ClickLogic : MonoBehaviour, IPointerClickHandler
     public void GetLastRecipe()
     {
         for (int i = 0; i <= _recipeList[_recipeList.Count - 1]._recipe.Count - 1; i++)
-        {            
+        {
             ingredientList.Add(_recipeList[_recipeList.Count - 1]._recipe[i]._ingredient);
         }
     }
