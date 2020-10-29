@@ -13,7 +13,7 @@ public class FieldGenerator : MonoBehaviour
     public GameObject _chips;
     public GameObject _helpChips;
     public ClickLogic _clickLogic;
-    public List<Chips> chipsAdded;
+    public Chips[ , ] chipsAdded;
     public List<Recipe> _ricepList; // make by hands. Replace enough recipe prefab 
     public List<Chips> _chipsEdited;
     public List<GameObject> _ingredientObjectList;
@@ -21,6 +21,7 @@ public class FieldGenerator : MonoBehaviour
     private int lengthChips = 21;
     private int widthChips = 21;
     private int points;
+    private List<int> numberOfColumn;
     public Camera _mainCamera;
     [SerializeField] private int recipeCount;
 
@@ -29,6 +30,8 @@ public class FieldGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        numberOfColumn = new List<int>();
+        chipsAdded = new Chips[_lengthOfField, _widthOfField];
         RandomizeRiceps();
         if (_widthOfField <= 2)
         {
@@ -40,6 +43,7 @@ public class FieldGenerator : MonoBehaviour
             _mainCamera.transform.position = new Vector3((12f + (_widthOfField) * 10), 50f, _widthOfField * 10);
             _mainCamera.orthographicSize = ((_widthOfField) * 20);
         }
+        
         _bufferListObject.GetComponent<SpecialList>()._chipsCoordinate = new GameObject[_lengthOfField, _widthOfField, 1];
         points = 0;
         _pointsLabel = _pointsObject.GetComponent<Text>();
@@ -49,12 +53,13 @@ public class FieldGenerator : MonoBehaviour
         GenerateField();
         GetCountRecipeChips();
 
-        if (chipsAdded.Count < recipeCount)
+        if (chipsAdded.Length < recipeCount)
         {
-            Debug.Log($"Need to add more recipe, not enough chips. You should add {recipeCount - chipsAdded.Count} chips to ricepes");
+            Debug.Log($"Need to add more recipe, not enough chips. You should add {recipeCount - chipsAdded.Length} chips to ricepes");
         }
         else
         {
+            SimpleNumber();
             SetTypesForChips();
             CreateRecipeOnField(_clickLogic._recipeList);
             ShowLastRecipe(_clickLogic._recipeList);
@@ -77,7 +82,9 @@ public class FieldGenerator : MonoBehaviour
             for (int j = 1; j <= _lengthOfField; j++)
             {
                 _chips = Instantiate(_chipsPrefab, new Vector3(transform.position.x + lengthChips, transform.position.y, transform.position.z + widthChips), _helpChips.transform.rotation);
-                chipsAdded.Add(_chips.GetComponent<Chips>());
+                // Try to not mix up
+                chipsAdded[j-1, i-1] = _chips.GetComponent<Chips>();
+                //chipsAdded.Add(_chips.GetComponent<Chips>());
                 lengthChips += 21;
                 _chips.AddComponent<ClickLogic>();
                 _chips.GetComponent<ClickLogic>()._recipeList = _ricepList;
@@ -104,19 +111,31 @@ public class FieldGenerator : MonoBehaviour
 
     public void SetTypesForChips()
     {
-        int countChips = 0;
-        int emptyTypeNumber;
-        for (int l = 0; l <= _ricepList.Count - 1; l++)
+        int YCoordinate = 0;
+        int XCoordinate = 0;
+
+        //int countChips = 0;
+        //int emptyTypeNumber;
+        for (int l = _ricepList.Count - 1; l >= 0; l--)
         {
             for (int k = 0; k <= _ricepList[l]._recipe.Count - 1; k++)
             {
-                emptyTypeNumber = Random.Range(0, chipsAdded.Count - 1);
-                chipsAdded[emptyTypeNumber]._emptyType = false;
-                _chipsEdited.Add(chipsAdded[emptyTypeNumber]);
-                _chipsEdited[countChips]._ingredient = _ricepList[l]._recipe[k]._ingredient;
-                SetTexturesForChips(chipsAdded[emptyTypeNumber].gameObject, l, k);
-                chipsAdded.Remove(chipsAdded[emptyTypeNumber]);
-                countChips++;
+
+                //emptyTypeNumber = Random.Range(0, chipsAdded.Count - 1);
+                chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._emptyType = false;
+                //_chipsEdited.Add(chipsAdded[emptyTypeNumber]);
+                chipsAdded[numberOfColumn[XCoordinate], YCoordinate]._ingredient = _ricepList[l]._recipe[k]._ingredient;
+                //_chipsEdited[countChips]._ingredient = _ricepList[l]._recipe[k]._ingredient;
+                SetTexturesForChips(chipsAdded[numberOfColumn[XCoordinate], YCoordinate].gameObject, l, k);
+                //chipsAdded.Remove(chipsAdded[emptyTypeNumber]);
+                //countChips++;
+                YCoordinate++;
+                if (YCoordinate > _widthOfField -1)
+                {
+                    XCoordinate++;
+                    YCoordinate = 0;
+                }
+
             }
         }
     }
@@ -196,6 +215,15 @@ public class FieldGenerator : MonoBehaviour
             int randomIndex = Random.Range(i, _ricepList.Count);
             _ricepList[i] = _ricepList[randomIndex];
             _ricepList[randomIndex] = temp;
+        }
+    }
+
+    public void SimpleNumber()
+    {
+        for (int i =0; i <= (_widthOfField/2); i++)
+        {
+            numberOfColumn.Add(0 + i);
+            numberOfColumn.Add((_widthOfField-1)-i);
         }
 
     }
